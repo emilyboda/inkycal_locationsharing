@@ -8,7 +8,7 @@ This module displays the locations of everyone you are connected with via Google
 </p>
 
 You must follow the instructions these instructions to set it up:
-1) Install a chrome extension to download your cookies, like this one :https://chrome.google.com/webstore/detail/get-cookiestxt/bgaddhkoddajcdgocldbbfleckgcbcid/related.
+1) Install a chrome extension to download your cookies, like this one: https://chrome.google.com/webstore/detail/get-cookiestxt/bgaddhkoddajcdgocldbbfleckgcbcid/related.
 2) Navigate to Google Maps, and log in (if you aren't already logged in). 
 3) Use the extension to download your cookies. 
 4) Move the cookies file to your Pi. 
