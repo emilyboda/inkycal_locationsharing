@@ -4,7 +4,7 @@ This is third-party module for the inkycal project for release 2.0.0.
 This module displays the locations of everyone you are connected with via Google Location Sharing. 
 
 <p align="left">
-<img src="https://github.com/emilyboda/inkycal_locationsharing/blob/master/example.PNG" width="200"><img 
+<img src="https://github.com/emilyboda/inkycal_locationsharing/blob/master/example.PNG" width="300"><img 
 </p>
 
 You must follow the instructions these instructions to set it up:
