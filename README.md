@@ -1,13 +1,19 @@
-# Name of your module
-This is third-party module for the inkycal project for release 2.0.0
+# Location Sharing Module (used with Google Location Sharing)
+This is third-party module for the inkycal project for release 2.0.0.
 
-First, add a **SCREENSHOT** (This is very important!)
+This module displays the locations of everyone you are connected with via Google Location Sharing. 
 
-Explain these things in a few sentences:
-* what this module does (why did you put effor into making this?)
-* what it requires (dependencies, account at some website etc.)
-* how to set it up (with a sample config)
-* development status (are you maintaining it?)
+<p align="left">
+<img src="https://github.com/emilyboda/inkycal_locationsharing/blob/master/example.PNG" width="200"><img 
+</p>
+
+You must follow the instructions these instructions to set it up:
+1) Install a chrome extension to download your cookies, like this one :https://chrome.google.com/webstore/detail/get-cookiestxt/bgaddhkoddajcdgocldbbfleckgcbcid/related.
+2) Navigate to Google Maps, and log in (if you aren't already logged in). 
+3) Use the extension to download your cookies. 
+4) Move the cookies file to your Pi. 
+5) Enter the full file path to your cookies file in the box in the settings file web-ui. For example: /home/pi/Inkycal/example.cookies
+6) Enter the email address you logged into Google Maps with into the box in the settings file web-ui. For example: myemail@gmail.com
 
 # Installation instructions
 How to install the module.
@@ -18,14 +24,14 @@ How to install the module.
 2) Download the third-party module:
 ```bash
 # The URL is the rawfile url. e.g. open mymodule.py, then click on [raw] to see the rawfile-url
-wget https://raw.githubusercontent.com/aceisace/inkycal_template/master/mymodule.py
+wget https://raw.githubusercontent.com/emilyboda/inkycal_locationsharing/master/inkycal_locationsharing.py
 ```
 
 3) Register this module in Inkycal
 ```python3
 # In python, type the following commands:
 from inkycal import Inkycal
-inkycal.add_module('/full/path/to/your/module.py')
+Inkycal.add_module('/full/path/to/your/module.py')
 # If everything went well, you should see a printed message without red lines.
 ```
 
