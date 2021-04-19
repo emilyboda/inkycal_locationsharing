@@ -303,6 +303,11 @@ class Locationsharing(inkycal_module):
           names_display = names_display[0:max_lines]
           locations_display = locations_display[0:max_lines]
     
+    """Draw a line above the module"""
+    ImageDraw.Draw(im_black).line(
+          (0, 0, im_width, 0),
+          fill = 'black')
+    
     """Write the name text on the display in the first column"""
     for _ in range(len(names_display)):
       write(im_black, line_positions[_], (line_width, line_height),
