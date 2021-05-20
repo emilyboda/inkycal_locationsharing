@@ -22,6 +22,7 @@ from inkycal.custom import *
 # Built-in libraries go here
 from random import shuffle
 import arrow
+from math import sin, cos, sqrt, atan2, radians
 
 #############################################################################
 #                         External library imports (always use try-except)
@@ -210,10 +211,19 @@ class Locationsharing(inkycal_module):
     
     locations_display = []
     names_display = []
+    distance_display = []
     
     longest_name = 0
+    longest_location = 0
+
     print('')
     print('Found the locations of the following people:')
+    
+    # For getting the distance away
+    my_coords = service.get_coordinates_by_full_name(self.google_email)
+    R_earth = 6373.0
+    lat1 = radians(my_coords[0])
+    lon1 = radians(my_coords[1])
     
     """Get location info from everyone who has shared their location with you"""
     for p in service.get_all_people():
@@ -228,11 +238,6 @@ class Locationsharing(inkycal_module):
       else:
           name = p.nickname + ":"
       names_display.append(name)
-    
-      """Finds the longest name in the list so we can indent later"""
-      name_size = font.getsize(name)[0]
-      if name_size > longest_name:
-          longest_name = name_size
           
       """Get city/state name"""
       # I used to get this from coordinates, but that library takes a while to load, so I
@@ -249,13 +254,45 @@ class Locationsharing(inkycal_module):
 
       # this is where I just parse the text of the address to get the city and state
       loc = p.address.split(",")[1].strip(" ")+", "+p.address.split(",")[2].split(" ")[1]
-      print(name, loc)
+      coords = service.get_coordinates_by_nickname(p.nickname)
+      
+      # this is where I do the math to get the distance away
+      lat2 = radians(coords[0])
+      lon2 = radians(coords[1])
+      
+      dlon = lon2 - lon1
+      dlat = lat2 - lat1
+      
+      a_coords = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+      c_coords = 2 * atan2(sqrt(a_coords), sqrt(1 - a_coords))
+      
+      distance_btwn = R_earth * c_coords * 0.621371
+      distance_text = str(round(distance_btwn)) + " mi away"
       locations_display.append(loc)
-    
+      if p.full_name == self.google_email:
+        distance_display.append("")
+      elif distance_btwn < 0.5:
+        distance_display.append("Very close")
+      else:
+        distance_display.append(distance_text)
+      
+      print(name, loc, distance_text)
+
+      """Finds the longest name in the list so we can indent later"""
+      name_size = font.getsize(name)[0]
+      if name_size > longest_name:
+          longest_name = name_size
+      
+      """Finds the location name in the list so we can indent later"""  
+      location_size = font.getsize(loc)[0]
+      if location_size > longest_location:
+          longest_location = location_size
+          
     """If the person has set an ordered preference for the names in the settings file, reorder the display"""
     if self.names_preference != []:
       names_display_ordered = []
       locations_display_ordered = []
+      distance_display_ordered = []
 
       """Goes through each preferred name and then each actual name and adds it to a new list if matched"""
       for o_name in self.names_preference:
@@ -263,6 +300,7 @@ class Locationsharing(inkycal_module):
               if o_name+":" == names_display[n]:
                   names_display_ordered.append(names_display[n])
                   locations_display_ordered.append(locations_display[n])
+                  distance_display_ordered.append(distance_display[n])
 
       """Then go through the old list and find any that weren't added and add them"""
       if self.names_limit == "no":
@@ -270,14 +308,17 @@ class Locationsharing(inkycal_module):
               if names_display[n] not in names_display_ordered:
                   names_display_ordered.append(names_display[n])
                   locations_display_ordered.append(locations_display[n]) 
+                  distance_display_ordered.append(distance_display[n])
         
       """Make the old list equal to the new ordered list"""
       names_display = names_display_ordered
       locations_display = locations_display_ordered
+      distance_display = distance_display_ordered
       
     """Add the title"""
     names_display.insert(0,self.title)
     locations_display.insert(0,'')
+    distance_display.insert(0,'')
     
     """Add a 'last updated' timestamp, if requested"""
     if self.last_updated == "yes":
@@ -315,10 +356,18 @@ class Locationsharing(inkycal_module):
         
     """Write the location text on the display in the second column"""
     # Column size is definited by the longest name in the first column
-    indent_size = longest_name+6
+    indent_size = longest_name+10
     for _ in range(len(locations_display)):
       write(im_black, (line_positions[_][0] + indent_size, line_positions[_][1]), 
         (line_width-indent_size, line_height), locations_display[_], font = font, alignment = 'left')
+        
+    """Write the distance text on the display in the third column"""
+    # Column size is definited by the longest location in the second column
+    indent_size = longest_name+10+longest_location+10
+    print(indent_size)
+    for _ in range(len(distance_display)):
+      write(im_black, (line_positions[_][0] + indent_size, line_positions[_][1]), 
+        (line_width-indent_size, line_height), distance_display[_], font = font, alignment = 'left')
 
     #################################################################
 
