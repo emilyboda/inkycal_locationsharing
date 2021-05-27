@@ -27,12 +27,29 @@ How to install the module.
 wget https://raw.githubusercontent.com/emilyboda/inkycal_locationsharing/master/inkycal_locationsharing.py
 ```
 
-3) Register this module in Inkycal
+3) Install locationsharinglib
+```bash
+  pip3 install locationsharinglib
+```
+  
+4) Register this module in Inkycal
+
+  Navigate to this file and edit it:
+```bash
+  nano /Inkycal/inkycal/__init__.py
+```
+Under #Default modules, add:
 ```python3
-# In python, type the following commands:
-from inkycal import Inkycal
-Inkycal.add_module('/full/path/to/your/module.py')
-# If everything went well, you should see a printed message without red lines.
+  import inkycal.modules.inkycal_locationsharing
+```
+
+Navigate to this file and edit it:
+```bash
+  nano /Inkycal/inkycal/modules/__init__.py
+```
+Add:
+```python3
+  from .inkycal_locationsharing import Locationsharing
 ```
 
 # Configuring this module
